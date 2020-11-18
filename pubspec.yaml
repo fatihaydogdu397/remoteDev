@@ -21,6 +21,14 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  shared_preferences: ^0.5.12
+  dio: ^3.0.10
+  http: ^0.12.2
+  auto_size_text: ^2.1.0
+  get: ^3.11.1
+  cached_network_image: ^2.3.2+1
+  flutter_html: ^1.0.2
+  url_launcher:
   flutter:
     sdk: flutter
 
@@ -60,6 +68,8 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+
+  #       - asset: fonts/Schyler-Italic.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
