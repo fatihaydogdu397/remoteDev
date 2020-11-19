@@ -62,8 +62,8 @@ class MainPage extends StatelessWidget {
                     collapsedHeight: 64,
                     flexibleSpace: Stack(
                       children: [
-                        Image.network(
-                          'https://www.bytagig.com/wp-content/uploads/2020/07/code-coding-computer-data-574071.jpg',
+                        Image.asset(
+                          "/assets/remote.jpg",
                           fit: BoxFit.fitWidth,
                           width: w,
                         ),
