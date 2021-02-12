@@ -7,6 +7,7 @@ import 'package:flutter_html/style.dart';
 import 'package:get/get.dart';
 import 'package:remotedev/controllers/auth/splash_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:html/dom.dart' as dom;
 
 class MainPage extends StatelessWidget {
   const MainPage({Key key}) : super(key: key);
@@ -23,11 +24,15 @@ class MainPage extends StatelessWidget {
         children: [
           Material(
             borderRadius: BorderRadius.circular(8),
-            elevation: 12,
+            elevation: 1,
             color: Color.fromRGBO(9, 170, 65, 1),
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
-              onTap: () {},
+              onTap: () async {
+                if (await canLaunch("https://remoteok.io/hire-remotely?")) {
+                  launch("https://remoteok.io/hire-remotely?");
+                }
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 height: 48,
@@ -63,7 +68,7 @@ class MainPage extends StatelessWidget {
                     flexibleSpace: Stack(
                       children: [
                         Image.asset(
-                          "/assets/remote.jpg",
+                          "assets/remote.jpg",
                           fit: BoxFit.fitWidth,
                           width: w,
                         ),
@@ -105,26 +110,6 @@ class MainPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // SliverToBoxAdapter(
-                  //   child: Container(
-                  //     child: SingleChildScrollView(
-                  //       scrollDirection: Axis.horizontal,
-                  //       child: Row(
-                  //         children: [
-                  //           JobCategories(),
-                  //           JobCategories(),
-                  //           JobCategories(),
-                  //           JobCategories(),
-                  //           JobCategories(),
-                  //           JobCategories(),
-                  //           JobCategories(),
-                  //           JobCategories(),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-
                   SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       return JobListItem(
@@ -139,43 +124,6 @@ class MainPage extends StatelessWidget {
                       );
                     }, childCount: controller?.res?.length ?? 0 /* */),
                   ),
-                  /*  SliverFillRemaining(
-                child: Container(
-                  child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                     
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            "New Jobs",
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Comic-Sans"),
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            JobListItem(
-                              tags: ['Frontend', 'Devops'],
-                            ),
-                            JobListItem(),
-                            JobListItem(),
-                            JobListItem(),
-                            JobListItem(),
-                            JobListItem(),
-                            JobListItem(),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-           */
                 ],
               ),
             );
@@ -213,15 +161,18 @@ class JobListItem extends StatelessWidget {
 
     final controller = Get.put(SplashController());
 
-    return Padding(
+    return Container(
+      // decoration: BoxDecoration(border:Border.all(color:Colors.grey[400]),
+      // borderRadius: BorderRadius.circular(8)),
       padding: const EdgeInsets.all(8.0),
       child: Material(
-        borderRadius: BorderRadius.circular(4),
-        color: Colors.blueGrey.shade400,
-        elevation: 4,
+        borderRadius: BorderRadius.circular(8),
+        borderOnForeground: true,
+        color: Colors.grey[100],
+        elevation: 7,
         shadowColor: Colors.black,
         child: InkWell(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           onTap: () {
             showModalBottomSheet(
                 context: context,
@@ -231,110 +182,126 @@ class JobListItem extends StatelessWidget {
                   topRight: Radius.circular(12),
                 )),
                 builder: (context) {
-                  return Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          '$position',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("$description"),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Material(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Color.fromRGBO(9, 170, 65, 1),
-                              child: InkWell(
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            '$position',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Html(
+                              data: """$description""",
+
+                              // customRender: (node, children) {
+                              //   if (node is dom.Element) {
+                              //     switch (node.localName) {
+                              //       case "custom_tag": // using this, you can handle custom tags in your HTML
+                              //         return Column(children: children);
+                              //     }
+                              //   }
+                              // },
+                            ),
+                            // Text("$description"),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Material(
                                 borderRadius: BorderRadius.circular(12),
-                                onTap: () async {
-                                  if (await canLaunch("$url")) {
-                                    launch("$url");
-                                  }
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 12),
-                                  child: Center(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.check,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(
-                                          width: 4,
-                                        ),
-                                        Text(
-                                          'Apply Now',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
-                                        ),
-                                      ],
+                                color: Color.fromRGBO(9, 170, 65, 1),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(12),
+                                  onTap: () async {
+                                    if (await canLaunch("$url")) {
+                                      launch("$url");
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 16, horizontal: 12),
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.check,
+                                            color: Colors.white,
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text(
+                                            'Apply Now',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            Material(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.grey.shade300,
-                              child: InkWell(
+                              SizedBox(
+                                height: 12,
+                              ),
+                              Material(
                                 borderRadius: BorderRadius.circular(12),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 12),
-                                  child: Center(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.close,
-                                        ),
-                                        SizedBox(
-                                          width: 4,
-                                        ),
-                                        Text(
-                                          'Cancel',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
+                                color: Colors.grey.shade300,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(12),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 16, horizontal: 12),
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.close,
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text(
+                                            'Cancel',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 });
@@ -369,14 +336,14 @@ class JobListItem extends StatelessWidget {
                           "$position",
                           maxLines: 2,
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(height: 4),
                       Text(
                         "$location",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 10,
                             fontWeight: FontWeight.w300),
                       ),
@@ -388,13 +355,13 @@ class JobListItem extends StatelessWidget {
                           return Container(
                             margin: EdgeInsets.only(right: 4),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white),
+                              border: Border.all(color: Colors.grey),
                             ),
                             padding: EdgeInsets.all(2.0),
                             child: Text(
                               "$e",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -413,7 +380,7 @@ class JobListItem extends StatelessWidget {
                         child: Text("$b d",
                             style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontWeight: FontWeight.normal)),
                       )
                     ],
