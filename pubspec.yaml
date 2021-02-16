@@ -28,6 +28,7 @@ dependencies:
   get: ^3.11.1
   cached_network_image: ^2.3.2+1
   flutter_html: ^1.0.2
+  flutter_launcher_icons: ^0.8.1
   url_launcher:
   flutter:
     sdk: flutter
@@ -56,6 +57,11 @@ flutter:
   assets:
     - assets/remote.jpg
   #   - images/a_dot_ham.jpeg
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
