@@ -1,4 +1,4 @@
-package com.example.remotedev
+package com.viennasoft.remotedev
 
 import io.flutter.embedding.android.FlutterActivity
 
